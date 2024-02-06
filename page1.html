@@ -2,14 +2,37 @@
     <head>
     </head>
     <body> 
-        <form action="">
+        <form action="page2.html">
             <label for="fname">First name:</label>
             <input type="text" id="fname" name="fname"><br><br>
             <label for="lname">Last name:</label>
-            <input type="text" id="lname" name="lname"><br><br>
+            <input type="text" id="lname" name="lname">
+
+            <div class="question">
+                <p>1. How many times wider is the sun than Earth?</p>
+                <label><input type="radio" name="q1" value="a"> About 10 times</label>
+                <label><input type="radio" name="q1" value="b"> About 50 times</label>
+                <label><input type="radio" name="q1" value="c"> About 100 times</label>
+            </div>
+
+            <div class="question">
+                <p>2. What is the sun's core temperature?</p>
+                <label><input type="radio" name="q2" value="a"> 2 million degrees Fahrenheit</label>
+                <label><input type="radio" name="q2" value="b"> 15 million degrees Fahrenheit</label>
+                <label><input type="radio" name="q2" value="c"> 27 million degrees Fahrenheit</label>
+            </div>
+        
+            <div class="question">
+                <p>3. How long does it take for the sun to complete one rotation of its equator?</p>
+                <label><input type="radio" name="q3" value="a"> 10 Earth days</label>
+                <label><input type="radio" name="q3" value="b"> 25 Earth days</label>
+                <label><input type="radio" name="q3" value="c"> 50 Earth days</label>
+            </div>
+
+            <br>
             <input type="reset" name="Reset">
+            <input type="submit" name="Submit">
         </form>
-        <a href="page2.html"><button>Submit</button></a>
         <br>
     </body>
 </html>

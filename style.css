@@ -1,16 +1,38 @@
-body {
+:root { /* white mode */
+    --bg-color: lightblue;
+    --txt-color: black; 
+}
+
+
+:root [dark-mode] { /* dark mode */
+    --bg-color: darkblue;
+    --txt-color: white;
+}
+
+body { /* html body */
+    background-color: var(--bg-color);
+    color: var(--txt-color);
     margin: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     height: 100%;
-    gap: 20px;
 }
 
+button { /* dark mode button */
+    padding: 5px;
+    background-color: white;
+    color: black;
+    font-size: 12px;
+    width: 100px;
+    position: fixed;
+    bottom: 5px;
+    right: 5px;
+}
 .header {
     font-size: 30px;
-  }
+}
 
 .facts {
     padding: 100px;
