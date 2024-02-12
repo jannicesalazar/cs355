@@ -5,5 +5,3 @@ function myFunction() {
     element.classList.toggle("dark-mode");
 }
 
-
-
