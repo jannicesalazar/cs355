@@ -1,3 +1,5 @@
+'use strict'
+
 //extract parameters from URL
 const urlParams = new URLSearchParams(window.location.search);
 const fname = urlParams.get('fname');

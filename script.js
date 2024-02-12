@@ -1,3 +1,5 @@
+'use strict'
+
 const $ = document.querySelector.bind(document);
 
 function myFunction() {
