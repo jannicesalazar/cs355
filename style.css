@@ -1,17 +1,12 @@
-:root { /* white mode */
-    --bg-color: lightblue;
-    --txt-color: black; 
-}
-
-
-:root [dark-mode] { /* dark mode */
-    --bg-color: darkblue;
-    --txt-color: white;
+.dark-mode {
+    background-color: darkblue;
+    color: white;
 }
 
 body { /* html body */
-    background-color: var(--bg-color);
-    color: var(--txt-color);
+    font-family:'Times New Roman', Times, serif;
+    background-color: lightblue;
+    color: black;
     margin: 0;
     display: flex;
     justify-content: center;
@@ -22,8 +17,8 @@ body { /* html body */
 
 button { /* dark mode button */
     padding: 5px;
-    background-color: white;
-    color: black;
+    background-color: black;
+    color: white;
     font-size: 12px;
     width: 100px;
     position: fixed;
