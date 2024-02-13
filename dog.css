@@ -1,3 +1,6 @@
+.body{
+    background-color: tan;
+}
 .doggy {
 text-align: center;
 margin-top: 50px;
@@ -5,6 +8,7 @@ margin-top: 50px;
 
 .title {
     text-align: center;
+    font-family : Arial, Helvetica, sans-serif;
 }
 
 #breed-input {
@@ -16,7 +20,7 @@ font-size: 16px;
 #show-images-btn {
 padding: 10px 20px;
 font-size: 16px;
-cursor: pointer;
+cursor: grab;
 }
 
 #breed-images {
