@@ -7,7 +7,7 @@ breedInput.addEventListener('input', async () => {
     //if breed input is empty, exit the function
     if (breed.length === 0) return;
     
-    // Fetch breeds from your own API
+    //fecth breeds
     const response = await fetch(`/breeds`);
     //parse response as JSON
     const breeds = await response.json();
@@ -23,7 +23,7 @@ breedInput.addEventListener('input', async () => {
         filteredBreeds.forEach(b => {
             const option = document.createElement('option'); //create option
             option.value = b; 
-            datalist.appendChild(option); // Append option to the datalist
+            datalist.appendChild(option); //append option to the datalist
         });
         //inserts datalist before the breed input field
         breedInput.parentNode.insertBefore(datalist, breedInput.nextSibling);
@@ -44,7 +44,7 @@ imageButton.addEventListener('click', async () => {
     const imgUrl = await response.text();
     
     //display the images
-    if (imgUrl.startsWith('/public/img/')) {
+    if (imgUrl.startsWith('/img/')) {
         imageContainer.innerHTML = '';
         const img = document.createElement('img'); //create an img 
         img.src = imgUrl; //set the src attribute for the img

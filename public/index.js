@@ -2,10 +2,10 @@
 const express = require('express');
 const app = express();
 
-// Function to generate a random integer
+// generates random integer
 const randInt = n => Math.floor(n * Math.random());
 
-// Function to get a random item from an array
+// gets random item from an array
 const getRandomItemFromArray = arr => arr[randInt(arr.length)];
 
 // Sample data for breeds and images
@@ -16,12 +16,12 @@ const breedImages = {
     'bulldog': ['bd.jpeg', 'bd2.jpeg', 'bd3.jpeg']
 };
 
-// Route to get a list of breeds
+// list of breeds
 app.get('/breeds', (req, res) => {
     res.json(breeds);
 });
 
-// Route to get a random image for a breed
+// random image for a breed
 app.get('/img/:breed', (req, res) => {
     const breed = req.params.breed.toLowerCase();
     const images = breedImages[breed];
@@ -33,10 +33,10 @@ app.get('/img/:breed', (req, res) => {
     }
 });
 
-// Route to serve static files from the public folder
+//serve static files from the public folder
 app.use(express.static('public'));
 
-// Start the server
+//start 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
