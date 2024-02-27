@@ -7,7 +7,7 @@ const randInt = n => Math.floor(n * Math.random());
 // gets random item from an array
 const getRandomItemFromArray = arr => arr[randInt(arr.length)];
 
-// Sample data for breeds and images
+// list of breeds and images
 const breeds = ['portuguese water dog', 'dalmatian', 'bulldog'];
 const breedImages = {
     'portuguese water dog': ['pwd.jpeg', 'pwd2.jpeg', 'pwd3.jpeg'],
