@@ -44,7 +44,7 @@ imageButton.addEventListener('click', async () => {
     const imgUrl = await response.text();
     
     //display the images
-    if (imgUrl.startsWith('/img/')) {
+    if (imgUrl.startsWith('/public/img/')) {
         imageContainer.innerHTML = '';
         const img = document.createElement('img'); //create an img 
         img.src = imgUrl; //set the src attribute for the img
