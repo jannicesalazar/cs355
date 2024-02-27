@@ -34,24 +34,24 @@ breedInput.addEventListener('input', async () => {
     }
 });
 
+//when button is clicked
 imageButton.addEventListener('click', async () => {
-    const breed = breedInput.value.trim();
-    //if breed input is empty, exit the function
-    if (breed.length === 0) return;
-
-    const response = await fetch(`/img/${breed}`);
-    //parse the response as JSON
-    const imgUrl = await response.text();
-    
-    //display the images
-    if (imgUrl.startsWith('/img/')) {
-        imageContainer.innerHTML = '';
-        const img = document.createElement('img'); //create an img 
-        img.src = imgUrl; //set the src attribute for the img
-        imageContainer.appendChild(img); //appends image to the container
-    } 
+    const breed = breedInput.value.trim().toLowerCase(); //get breed input
+    if (breed == "") {
+        imageContainer.innerHTML = "No Breed Selected"; //if no breed is selected, display message
+    }
     else {
-        //display an error message 
-        imageContainer.innerHTML = 'No such breed';
+        url = "http://localhost:3000/image/" + breed //get image for breed
+        fetch(url)      
+            .then(r => r.json()) //parse response as JSON
+            .then(data => { //display image
+                console.log(data); 
+                if (data.status == "error") {
+                   imageContainer.innerHTML = "Breed not found";
+                }
+                else {
+                    imageContainer.innerHTML = "<img src='" + data.message + "'>";
+                }
+            });
     }
 });

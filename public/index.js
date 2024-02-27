@@ -1,4 +1,3 @@
-
 const express = require('express');
 const app = express();
 
@@ -22,15 +21,13 @@ app.get('/breeds', (req, res) => {
 });
 
 // random image for a breed
-app.get('/img/:breed', (req, res) => {
-    const breed = req.params.breed.toLowerCase();
-    const images = breedImages[breed];
-    if (images) {
-        const imageName = getRandomItemFromArray(images);
-        res.sendFile(`${__dirname}/public/img/${imageName}`);
-    } else {
-        res.status(404).send('Breed not found');
-    }
+app.get('/image/:breed', (req, res) => {
+    let thebreed = req.params.breed;
+    const randInt = n => Math.floor(n * Math.random());
+    const getRandomItemFromArray = arr => arr[randInt(arr.length)];
+    const imagePath = "img/" + getRandomItemFromArray(breedImages[thebreed]);
+
+    res.send({ message: imagePath });
 });
 
 //serve static files from the public folder
@@ -41,3 +38,5 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
+
+
