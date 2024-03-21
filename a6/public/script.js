@@ -2,21 +2,22 @@
 
 const $ = document.querySelector.bind(document);
 
-// function to make a generic HTTP request
-function httpRequest(url, options) {
-    return fetch(url, options)
-        .then(response => response.json())
-        .catch(err => showError('ERROR: ' + err));
-}
+// login link action
+$('#loginLink').addEventListener('click',openLoginScreen);
 
+// register link action
+$('#registerLink').addEventListener('click',openRegisterScreen);
+
+// logout link action
+$('#logoutLink').addEventListener('click',openLoginScreen);
 // sign In button action
 $('#loginBtn').addEventListener('click', () => {
     if (!$('#loginUsername').value || !$('#loginPassword').value)
         return;
 
-    const username = $('#loginUsername').value;
+    const username = $('#loginUsername').value; // get username from input
 
-    fetch('/users/' + username)
+    fetch('/users/' + username) // get user record
         .then(res => res.json())
         .then(doc => {
             if (doc.error) {
@@ -28,7 +29,7 @@ $('#loginBtn').addEventListener('click', () => {
             }
         })
         .catch(err => showError('ERROR: ' + err));
-});
+    });
 
 // register button action
 $('#registerBtn').addEventListener('click', () => {
