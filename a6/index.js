@@ -8,17 +8,16 @@ app.use(express.static('public'));        // enable static routing to "./public"
 
 //TODO:
 // automatically decode all requests from JSON and encode all responses into JSON
-app.use(express.static('public'));
 app.use(express.json());
 
 //TODO:
 // create route to get all user records (GET /users)
 //   use db.find to get the records, then send them
 //   use .catch(error=>res.send({error})) to catch and send errors
-app.get('/data',(req,res)=>{ // GET all data
+app.get('/users',(req,res)=>{ // GET all data
     db.find({})
     .then(docs=>res.send(docs))
-    .catch(error=>res.send({error}));
+    .catch(error=>res.status(500).send({error}));
    });
 
 //TODO:
@@ -27,11 +26,17 @@ app.get('/data',(req,res)=>{ // GET all data
 //     if record is found, send it
 //     otherwise, send {error:'Username not found.'}
 //   use .catch(error=>res.send({error})) to catch and send other errors
-app.get('/users/:username',(req,res)=>{ // GET one data
+app.get('/users/:username',(req,res)=>{ // GET one user
     db.findOne({username:req.params.username})
-    .then(doc=>doc?res.send(doc):res.send({error:'Username not found.'}))
-    .catch(error=>res.send({error}));
-   });
+    .then(doc=>{
+        if(doc) {
+            res.send(doc); // send the user record if found
+        } else {
+            res.status(404).send({error:'Username not found.'}); // send error if username is not found
+        }
+    })
+    .catch(error=>res.status(500).send({error}));
+});
 
 //TODO:
 // create route to register user (POST /users)
@@ -42,15 +47,20 @@ app.get('/users/:username',(req,res)=>{ // GET one data
 //       use insertOne to add document to database
 //       if all goes well, send returned document
 //   use .catch(error=>res.send({error})) to catch and send other errors
-
-app.post('/users',(req,res)=>{ // POST one data
+app.post('/users',(req,res)=>{ // POST one user
     if(!req.body.username || !req.body.password || !req.body.email || !req.body.name)
-        return res.send({error:'Missing fields.'});
+        return res.status(400).send({error:'Missing fields.'});
     db.findOne({username:req.body.username})
-    .then(doc=>doc?res.send({error:'Username already exists.'}):db.insertOne(req.body))
+    .then(doc=>{
+        if(doc) {
+            res.status(400).send({error:'Username already exists.'});
+        } else {
+            return db.insertOne(req.body);
+        }
+    })
     .then(doc=>res.send(doc))
-    .catch(error=>res.send({error}));
-   });
+    .catch(error=>res.status(500).send({error}));
+});
 
 //TODO:
 // create route to update user doc (PATCH /users/:username)
@@ -59,12 +69,17 @@ app.post('/users',(req,res)=>{ // POST one data
 //     if 0 records were updated, send {error:'Something went wrong.'}
 //     otherwise, send {ok:true}
 //   use .catch(error=>res.send({error})) to catch and send other errors
-
-app.patch('/users/:username',(req,res)=>{ // PATCH one data
+app.patch('/users/:username',(req,res)=>{ // PATCH one user
     db.updateOne({username:req.params.username},{$set:req.body})
-    .then(num=>num?res.send({ok:true}):res.send({error:'Something went wrong.'}))
-    .catch(error=>res.send({error}));
-    });
+    .then(num=>{
+        if(num === 1) {
+            res.send({ok:true}); // send {ok:true} if record was updated
+        } else {
+            res.status(500).send({error:'Something went wrong.'}); // send error if update failed
+        }
+    })
+    .catch(error=>res.status(500).send({error}));
+});
 
 //TODO:
 // create route to delete user doc (DELETE /users/:username)
@@ -73,12 +88,17 @@ app.patch('/users/:username',(req,res)=>{ // PATCH one data
 //     if 0 records were deleted, send {error:'Something went wrong.'}
 //     otherwise, send {ok:true}
 //   use .catch(error=>res.send({error})) to catch and send other errors
-
-app.delete('/users/:username',(req,res)=>{ // DELETE one data 
+app.delete('/users/:username',(req,res)=>{ // DELETE one user
     db.deleteOne({username:req.params.username})
-    .then(num=>num?res.send({ok:true}):res.send({error:'Something went wrong.'}))
-    .catch(error=>res.send({error}));
-    });
+    .then(num=>{
+        if(num === 1) {
+            res.send({ok:true}); // send {ok:true} if record was deleted
+        } else {
+            res.status(500).send({error:'Something went wrong.'}); // send error if delete failed
+        }
+    })
+    .catch(error=>res.status(500).send({error}));
+});
 
 // default route
 app.all('*',(req,res)=>{res.status(404).send('Invalid URL.')});

@@ -2,37 +2,35 @@
 
 const $ = document.querySelector.bind(document);
 
-// Function to make a generic HTTP request
+// function to make a generic HTTP request
 function httpRequest(url, options) {
     return fetch(url, options)
         .then(response => response.json())
         .catch(err => showError('ERROR: ' + err));
 }
 
-// Sign In button action
+// sign In button action
 $('#loginBtn').addEventListener('click', () => {
     if (!$('#loginUsername').value || !$('#loginPassword').value)
         return;
-    // TODO: 
-    //   GET /users/{username}, where {username} is $('#loginUsername').value
-    //     decode response from json to object called doc
-    //     if doc.error, call showError(doc.error)
-    //     otherwise, if doc.password is NOT the same as $('#loginPassword').value,
-    //       call showError('Username and password do not match.')
-    //     otherwise, call openHomeScreen(doc)
-    //   use .catch(err=>showError('ERROR: '+err)}) to show any other errors
-    httpRequest('/users/' + $('#loginUsername').value)
+
+    const username = $('#loginUsername').value;
+
+    fetch('/users/' + username)
+        .then(res => res.json())
         .then(doc => {
-            if (doc.error)
+            if (doc.error) {
                 showError(doc.error);
-            else if (doc.password !== $('#loginPassword').value)
+            } else if (doc.password !== $('#loginPassword').value) {
                 showError('Username and password do not match.');
-            else
+            } else {
                 openHomeScreen(doc);
-        });
+            }
+        })
+        .catch(err => showError('ERROR: ' + err));
 });
 
-// Register button action
+// register button action
 $('#registerBtn').addEventListener('click', () => {
     if (!$('#registerUsername').value || !$('#registerPassword').value ||
         !$('#registerName').value || !$('#registerEmail').value) {
@@ -46,92 +44,81 @@ $('#registerBtn').addEventListener('click', () => {
         name: $('#registerName').value,
         email: $('#registerEmail').value
     };
-    // TODO: 
-    //   POST /users
-    //     convert data (defined above) to json, and send via POST to /users
-    //     decode response from json to object called doc
-    //     if doc.error, showError(doc.error)
-    //     otherwise, openHomeScreen(doc)
-    //   use .catch(err=>showError('ERROR: '+err)}) to show any other errors
-    httpRequest('/users', {
+
+    fetch('/users', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(data)
-    }).then(doc => {
-        if (doc.error)
-            showError(doc.error);
-        else
-            openHomeScreen(doc);
-    });
+    })
+        .then(res => res.json())
+        .then(doc => {
+            if (doc.error) {
+                showError(doc.error);
+            } else {
+                openHomeScreen(doc);
+            }
+        })
+        .catch(err => showError('ERROR: ' + err));
 });
 
-// Update button action
-$('#updateBtn').addEventListener('click',()=>{
-    // check to make sure no fields aren't blank
-    if(!$('#updateName').value || !$('#updateEmail').value){
+// update button action
+$('#updateBtn').addEventListener('click', () => {
+    if (!$('#updateName').value || !$('#updateEmail').value) {
         showError('Fields cannot be blank.');
         return;
     }
-    // grab all user info from input fields
-    var data = {
+
+    const data = {
         name: $('#updateName').value,
         email: $('#updateEmail').value
     };
-    // TODO: 
-    //   PATCH /users/{username}, where {username} is $('#username').innerText
-    //     convert data (defined above) to json, and send via PATCH to /users/{username}
-    //     decode response from json to object called doc
-    //     if doc.error, showError(doc.error)
-    //     otherwise, if doc.ok,
-    //       alert("Your name and email have been updated.");
-    //   use .catch(err=>showError('ERROR: '+err)}) to show any other errors
-    get.patch('/users/'+$('#username').innerText,data)
-    .then(res=>res.json())
-    .then(doc=>{
-        if(doc.error)
-            showError(doc.error);
-        else if(doc.ok)
-            alert("Your name and email have been updated.");
+
+    fetch('/users/' + $('#username').innerText, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
     })
-    .catch(err=>showError('ERROR: '+err));
+        .then(res => res.json())
+        .then(doc => {
+            if (doc.error) {
+                showError(doc.error);
+            } else if (doc.ok) {
+                alert("Your name and email have been updated.");
+            }
+        })
+        .catch(err => showError('ERROR: ' + err));
 });
 
 // Delete button action
-$('#deleteBtn').addEventListener('click',()=>{
-    // confirm that the user wants to delete
-    if(!confirm("Are you sure you want to delete your profile?"))
+$('#deleteBtn').addEventListener('click', () => {
+    if (!confirm("Are you sure you want to delete your profile?"))
         return;
-    // TODO: 
-    //   DELETE /users/{username}, where {username} is $('#username').innerText
-    //     decode response from json to object called doc
-    //     if doc.error, showError(doc.error)
-    //     otherwise, openLoginScreen()
-    //   use .catch(err=>showError('ERROR: '+err)}) to show any other errors
-    get.delete('/users/'+$('#username').innerText)
-    .then(res=>res.json())
-    .then(doc=>{
-        if(doc.error)
-            showError(doc.error);
-        else
-            openLoginScreen();
+
+    fetch('/users/' + $('#username').innerText, {
+        method: 'DELETE'
     })
-    .catch(err=>showError('ERROR: '+err));
+        .then(res => res.json())
+        .then(doc => {
+            if (doc.error) {
+                showError(doc.error);
+            } else {
+                openLoginScreen();
+            }
+        })
+        .catch(err => showError('ERROR: ' + err));
 });
 
-function showListOfUsers(){
-    // TODO:
-    //   GET /users
-    //     decode response from json to an array called docs
-    //     for every doc in docs, call showUserInList(doc)
-    //       you can do this by using a for-loop or, better yet, a forEach function:
-    //         docs.forEach(showUserInList)
-    //   use .catch(err=>showError('Could not get user list: '+err)}) to show any potential errors
-    get('/users')
-    .then(res=>res.json())
-    .then(docs=>docs.forEach(showUserInList))
-    .catch(err=>showError('Could not get user list: '+err));
+function showListOfUsers() {
+    fetch('/users')
+        .then(res => res.json())
+        .then(docs => {
+            docs.forEach(showUserInList);
+        })
+        .catch(err => showError('Could not get user list: ' + err));
 }
 
 function showUserInList(doc){
