@@ -17,13 +17,16 @@ $('#loginBtn').addEventListener('click', () => {
 
     const username = $('#loginUsername').value; // get username from input
 
-    fetch('/users/' + username) // get user record
-        .then(res => res.json())
+    fetch('/login',{
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+
+        body: JSON.stringify({ username: username, password: $('#loginPassword').value}) }
+        // get user record}
+    ).then(res => res.json())
         .then(doc => {
-            if (doc.error) {
+            if (!doc.auth) {
                 showError(doc.error);
-            } else if (doc.password !== $('#loginPassword').value) {
-                showError('Username and password do not match.');
             } else {
                 openHomeScreen(doc);
             }
@@ -151,11 +154,11 @@ function openHomeScreen(doc){
     // reveal home screen
     $('#homeScreen').classList.remove('hidden');
     // display name, username
-    $('#name').innerText = doc.name;
-    $('#username').innerText = doc.username;
+    $('#name').innerText = doc.user.name;
+    $('#username').innerText = doc.user.username;
     // display updatable user info in input fields
-    $('#updateName').value = doc.name;
-    $('#updateEmail').value = doc.email;
+    $('#updateName').value = doc.user.name;
+    $('#updateEmail').value = doc.user.email;
     // clear prior userlist
     $('#userlist').innerHTML = '';
     // show new list of users
