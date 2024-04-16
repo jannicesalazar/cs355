@@ -20,19 +20,6 @@ app.get('/users',(req,res)=>{ // GET all data
     .catch(error=>res.status(500).send({error}));
    });
 
-//route to get user record by username
-app.get('/users/:username',(req,res)=>{ // GET one user
-    db.findOne({username:req.params.username})
-    .then(doc=>{
-        if(doc) {
-            res.send(doc); // send the user record if found
-        } else {
-            res.status(404).send({error:'Username not found.'}); // send error if username is not found
-        }
-    })
-    .catch(error=>res.status(500).send({error}));
-});
-
 //route to register user
 app.post('/users', (req, res) => {
     const { username, password, email, name } = req.body;
