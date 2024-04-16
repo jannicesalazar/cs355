@@ -25,7 +25,7 @@ $('#loginBtn').addEventListener('click', () => {
         // get user record}
     ).then(res => res.json())
         .then(doc => {
-            if (!doc.auth) {
+            if (!doc.authToken) {
                 showError(doc.error);
             } else {
                 openHomeScreen(doc);
@@ -79,7 +79,7 @@ $('#updateBtn').addEventListener('click', () => {
         email: $('#updateEmail').value
     };
 
-    fetch('/users/' + $('#username').innerText, {
+    fetch('/users/' + $('#username').innerText+'/'+localStorage.authToken, {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json'
@@ -102,7 +102,7 @@ $('#deleteBtn').addEventListener('click', () => {
     if (!confirm("Are you sure you want to delete your profile?"))
         return;
 
-    fetch('/users/' + $('#username').innerText, {
+    fetch('/users/' + $('#username').innerText+'/'+localStorage.authToken, {
         method: 'DELETE'
     })
         .then(res => res.json())
@@ -146,6 +146,7 @@ function resetInputs(){
 }
 
 function openHomeScreen(doc){
+    localStorage.authToken = doc.authToken;
     // hide other screens, clear inputs, clear error
     $('#loginScreen').classList.add('hidden');
     $('#registerScreen').classList.add('hidden');
@@ -184,4 +185,3 @@ function openRegisterScreen(){
     // reveal register screen
     $('#registerScreen').classList.remove('hidden');
 }
-

@@ -33,7 +33,6 @@ app.get('/users/:username',(req,res)=>{ // GET one user
     .catch(error=>res.status(500).send({error}));
 });
 
-
 //route to register user
 app.post('/users', (req, res) => {
     const { username, password, email, name } = req.body;
@@ -47,12 +46,12 @@ app.post('/users', (req, res) => {
     db.findOne({ username })
         .then(existingUser => {
             if (existingUser) {
-                return res.status(400).send({ error: 'Username already exists.' });
+                return res.status(400).send({ error: 'Username already exists. Please choose a different one.' });
             }
 
             //hash the password
             const hashedPassword = bcrypt.hashSync(password, 10);
-            // Generate authentication token
+            //generate authentication token
             const authToken = generateAuthToken();
 
             //create new user object
@@ -61,15 +60,20 @@ app.post('/users', (req, res) => {
                 password: hashedPassword,
                 email,
                 name,
-                authToken
+                authToken // authToken is defined here
             };
 
             //insert new user into the database
-            return db.insertOne(newUser);
+            return db.insertOne(newUser)
+                       .then(insertedUser => ({insertedUser, authToken})); // return both inserted user and authToken
         })
-        .then(insertedUser => {
+        .then(({insertedUser, authToken}) => {
+            if (!insertedUser) {
+                // Handle the case where insertion failed
+                return res.status(500).send({ error: 'Failed to register user.' });
+            }
             //send back authentication token
-            res.send({user: {username: insertedUser.username, name: insertedUser.name, email: insertedUser.email}  ,auth: insertedUser.authToken });
+            res.send({user: {username: insertedUser.username, name: insertedUser.name, email: insertedUser.email}, authToken });
         })
         .catch(error => {
             console.error(error);
@@ -78,63 +82,59 @@ app.post('/users', (req, res) => {
 });
 
 
+
 //route to update user doc
-app.patch('/users/:username', (req, res) => {
-    const { username } = req.params;
-    const { authToken, newData } = req.body;
+app.patch('/users/:username/:authToken', (req, res) => {
+    const { username, authToken } = req.params;
 
     //verify the authentication token
-    db.findOne({ username, authToken })
+    db.findOne({ username, authToken})
         .then(user => {
             if (!user) {
                 return res.status(401).send({ error: 'Unauthorized.' });
             }
-
             //update user data
-            return db.updateOne({ username }, { $set: newData });
-        })
-        .then(numUpdated => {
-            if (numUpdated === 1) {
-                res.send({ ok: true });
-            } else {
-                res.status(500).send({ error: 'Something went wrong.' });
-            }
+            db.updateOne({ username }, { $set: req.body })
+            .then(numUpdated => {
+                if (numUpdated === 1) {
+                    res.send({ ok: true });
+                } else {
+                    res.status(500).send({ error: 'Something went wrong.' });
+                }
+            })
         })
         .catch(error => {
             res.status(500).send({ error: 'Internal server error.' });
         });
 });
 
-
 //route to delete user doc
-app.delete('/users/:username', (req, res) => {
-    const { username } = req.params;
-    const { authToken } = req.body;
+app.delete('/users/:username/:authToken', (req, res) => {
+    const { username, authToken } = req.params;
 
     // verify the authentication token
     db.findOne({ username, authToken })
         .then(user => {
             if (!user) {
-                res.status(401).send({ error: 'Unauthorized.' });
-                return;
+                console.log('here')
+                return res.status(401).send({ error: 'Unauthorized.' });     
             }
-
             // delete user data
-            return db.deleteOne({ username });
-        })
-        .then(numDeleted => {
-            if (numDeleted === 1) {
-                res.send({ ok: true });
-            } else {
-                res.status(500).send({ error: 'Something went wrong.' });
-            }
+            db.deleteOne({ username }, { $set: req.body })
+            .then(numDeleted => {
+                console.log('here!',numDeleted)
+                if (numDeleted === 1) {
+                    res.send({ ok: true });
+                } else {
+                    res.status(500).send({ error: 'Something went wrong.' });
+                }
+            })
         })
         .catch(error => {
+            console.log('here?',error)
             res.status(500).send({ error: 'Internal server error.' });
         });
 });
-
-
 
 //route to handle user login
 app.post('/login', (req, res) => {
@@ -149,12 +149,11 @@ app.post('/login', (req, res) => {
             const authToken = generateAuthToken();
             
             db.updateOne({ username }, { $set: { authToken } })
-                .then(() => res.send({ auth: authToken, user: { username: user.username, name: user.name, email: user.email } }))
+                .then(() => res.send({ authToken, user: { username: user.username, name: user.name, email: user.email } }))
                 .catch(err => res.status(500).send({ error: 'Internal server error.' }));
         })
         .catch(err => res.status(500).send({ error: 'Internal server error.' }));
 });
-
 
 //default route
 app.all('*', (req, res) => {res.status(404).send('Invalid URL.');});
