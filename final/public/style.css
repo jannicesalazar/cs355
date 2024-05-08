@@ -1,0 +1,166 @@
+.top-bar {
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+}
+
+.left-section {
+  font-size: 30px;
+  display: flex;
+  align-items: center;
+  font-family: monospace;
+  text-decoration: none;
+}
+
+.right-section {
+  display: flex;
+  align-items: center;
+  font-family: monospace;
+  cursor: default; 
+  color: rgb(255, 255, 255); 
+}
+
+.register {
+  padding: 10px;
+  border: rgb(40, 54, 40) 1px solid;
+  border-radius: 20px;
+  background-color: rgb(45, 63, 45);
+}
+
+.btn1 {
+  padding: 10px;
+  border: rgb(40, 54, 40) 1px solid;
+  border-radius: 20px;
+  background-color: rgb(45, 63, 45);
+  margin: 30px;
+}
+
+.login {
+  padding: 20px;
+  color: black;
+}
+
+.prepare {
+  font-weight: bold;
+}
+
+.user-actions .btn {
+  margin-left: 10px;
+}
+
+.hero {
+  background-color: #f4f4f4;
+  padding: 100px;
+  text-align: center;
+  font-family: monospace;
+}
+a:link {
+  text-decoration: none;
+}
+a:visited {
+  text-decoration: none;
+  color: black;
+}
+
+a:hover {
+  text-decoration: none;
+  color: green;
+}
+
+a:active {
+  text-decoration: none;
+}
+
+nav {
+  background-color: #496b52;
+  padding: 10px;
+  align-items: center;
+  font-family: monospace;
+}
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+nav ul li {
+  display: inline;
+  margin-right: 10px;
+}
+nav ul li a {
+  color: white;
+  text-decoration: none;
+}
+nav ul li a:hover {
+  color: green;
+}
+
+.square {
+  width: 200px;
+  height: 200px;
+  background-color: #ddd;
+  margin: 10px;
+  display: inline-block;
+  text-align: center;
+  padding-top: 80px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.map-container { position: relative; height: 300px; margin-top: 1px;}
+
+#map { height: 100%;}
+
+.leaflet-popup-tip-container{display: none;}
+
+.leaflet-popup-content {width: 130px; height: 120px; text-align: center; }
+
+.weather-icon { width: 50px; height: 50px; }
+
+.map-container, #map, #input, .leaflet-popup-content {
+    animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+
+
+
+.popup {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.4);
+}
+
+.popup-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}

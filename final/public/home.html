@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PREPARE</title>
+    <link rel="icon" type="png" href="tab.png">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+    <link rel="stylesheet" href="style.css">
+    <script  src="https://cdn.jsdelivr.net/npm/sweetalert2@11" id="popup"></script>
+</head>
+<body>
+    <header>
+        <div class="top-bar">
+            <div class="left-section">
+                <div class="prepare">PREPARE</div>
+            </div>
+            <div class="right-section">
+                <a href="index.html" class="login">Logout</a> 
+            </div>
+        </div>
+        <nav>
+          <ul>
+              <li><a href="">Home</a></li>
+              <li><a href="">Profile</a></li>
+          </ul>
+      </nav>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+
+        </div>
+    </section >
+    <!-- container for the map -->
+    <div class="map-container">
+        <div id="map"></div>
+    </div>
+    <!-- Login/Registration Popup -->
+    <div id="popup-container" class="popup">
+        <div class="popup-content">
+            <span class="close" onclick="closePopup()">&times;</span>
+            <h2>Login</h2>
+            <form id="login-form">
+                <input type="text" placeholder="Username" id="username">
+                <input type="password" placeholder="Password" id="password">
+                <button type="submit" onclick="login()">Login</button>
+            </form>
+            <p>Don't have an account? <a href="#" onclick="showRegister()">Register</a></p>
+        </div>
+    </div>
+    <!-- Leaflet CSS and JS from CDN -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    
+    <!-- JavaScript -->
+    <script src='script.js'></script>
+</body>
+</html>

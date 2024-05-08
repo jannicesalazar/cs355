@@ -1,5 +1,5 @@
 body {
-    background-color: #abf;
+    background-color: rgb(40,54,40);
     display:flex;
     align-items: center;
     justify-items: center;
@@ -16,6 +16,12 @@ div {
 
 .title {
     font-weight: bold;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    font-family: monospace;
+    text-decoration: none;
+
 }
 
 .critical {
@@ -44,4 +50,11 @@ div {
 
 .hidden {
     display: none
+}
+.right {
+    align-items: right;
+    font-family: monospace;
+    cursor: default; 
+    color: rgb(255, 255, 255); 
+    font-size: 15px;
 }

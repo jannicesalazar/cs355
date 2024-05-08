@@ -1,12 +1,12 @@
 <html>
     <head>
-        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="logstyle.css">
     </head>
     <body>
         <div id="frame">
-
-            <div class="title">Welcome to our social!</div>
-
+            <div class="title">
+                <div class="prepare">PREPARE</div>
+            </div>
             <div id="main">
 
                 <div id="loginScreen">
@@ -19,7 +19,7 @@
                     <hr>
                     <div>
                         Don't have an account?
-                        Click <a href="#" id="registerLink">here</a> to register.
+                        Click <a href="#register" id="registerLink">here</a> to register.
                     </div>
                 </div>
 
@@ -58,12 +58,14 @@
                     Here's the current list of users on our social:
                     <div id="userlist"></div>
                 </div>
-
+                <div class="right">
+                    <a href="index.html" id="back">Back</a>
+                </div>
             </div>
 
             <div id="error" class="critical"></div>
 
         </div>
     </body>
-    <script src="script.js"></script>
+    <script src="logscript.js"></script>
 </html>
