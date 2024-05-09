@@ -146,4 +146,4 @@ app.post('/login', (req, res) => {
 app.all('*', (req, res) => {res.status(404).send('Invalid URL.');});
 
 //start server
-app.listen(3000, () => console.log("Server started on http://localhost:3000"));
+app.listen(3001, () => console.log("Server started on http://localhost:3001"));

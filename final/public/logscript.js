@@ -2,8 +2,66 @@
 
 const $ = document.querySelector.bind(document);
 
+
+const form = document.getElementById('signupFOrm');
+const popup = document.getElementsByClassName('hero-content');
+const input = document.getElementById('address');
+
+// Initialize Google Places Autocomplete
+// const autocomplete = new google.maps.places.Autocomplete(input);
+
+const getClimate =  async () => {
+    if (input.value) localStorage.setItem("address", input.value)
+
+    const address = input.value || localStorage.getItem('address');
+
+    // Perform basic validation to ensure address is not empty
+    if (!address.trim()) {
+        alert('Please enter a valid address.');
+        return;
+    }
+
+    // Use a geocoding service to get latitude and longitude
+    const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=AIzaSyAy9DVSWmQyFMBkMzly4eFjczHnZLPU08w`);
+    const data = await response.json();
+    console.log(data, 'lat and lon')
+
+    if (data) {
+        const result = data.results[0].geometry.location
+        const latitude = result.lat
+        const longitude = result.lng
+        console.log("latitude: ", latitude, "longitude: ", longitude)
+        // Fetch weather information
+        const weatherResponse = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=6dea368c99a053969745d5e110936277`);
+        const weatherData = await weatherResponse.json();
+        console.log(weatherData, 'weather')
+
+        // Fetch natural disaster information
+        const disasterResponse = await fetch(`https://api.ncei.noaa.gov/data/global-summary-of-the-day?latitude=${latitude}&longitude=${longitude}&datasetid=GSOM&units=metric&startdate=2023-01-01&enddate=2023-01-01&token=PwfvrAAFdXIluwIJJDDemafDSVEUEpAF`);
+        const disasterData = await disasterResponse.json();
+        console.log(disasterData)
+
+        // Construct popup content
+        const popupContent = `
+            <h3>Weather Information</h3>
+            <p>Temperature: ${weatherData.main.temp}°C</p>
+            <p>Description: ${weatherData.weather[0].description}</p>
+            <h3>Natural Disaster Information</h3>
+            <!-- Display relevant disaster information here -->
+        `;
+
+        // Display popup with content
+        popup.innerHTML = popupContent;
+        popup.style.display = 'block';
+    } else {
+        alert('Address not found!');
+    }
+};
+
+// $("#getClimamte") && $("#getClimamte").addEventListener("click", getClimate)
+
 // login link action
-$('#loginLink').addEventListener('click',openLoginScreen);
+$('#loginLink').addEventListener('click', openLoginScreen);
 
 // register link action
 $('#registerLink').addEventListener('click',openRegisterScreen);
@@ -24,24 +82,24 @@ $('#loginBtn').addEventListener('click', () => {
         body: JSON.stringify({ username: username, password: $('#loginPassword').value}) }
         // get user record}
     ).then(res => res.json())
-        .then(doc => {
+        .then(async doc => {
             if (!doc.authToken) {
                 showError(doc.error);
             } else {
-                openHomeScreen(doc);
+                await openHomeScreen(doc);
             }
         })
         .catch(err => showError('ERROR: ' + err));
     });
 
 // register button action
-$('#registerBtn').addEventListener('click', () => {
+$('#registerBtn').addEventListener('click', async () => {
     if (!$('#registerUsername').value || !$('#registerPassword').value ||
-        !$('#registerName').value || !$('#registerEmail').value) {
+        !$('#registerName').value || !$('#registerEmail').value || !$("#address").value) {
         showError('All fields are required.');
         return;
     }
-
+    localStorage.setItem("address", $("#address").value);
     const data = {
         username: $('#registerUsername').value,
         password: $('#registerPassword').value,
@@ -57,11 +115,11 @@ $('#registerBtn').addEventListener('click', () => {
         body: JSON.stringify(data)
     })
         .then(res => res.json())
-        .then(doc => {
+        .then(async doc => {
             if (doc.error) {
                 showError(doc.error);
             } else {
-                openHomeScreen(doc);
+                await openHomeScreen(doc);
             }
         })
         .catch(err => showError('ERROR: ' + err));
@@ -145,8 +203,11 @@ function resetInputs(){
     }
 }
 
-function openHomeScreen(doc){
+async function openHomeScreen(doc){
     localStorage.authToken = doc.authToken;
+    console.log("registering")
+    window.location.href = "/home.html"
+    return
     // hide other screens, clear inputs, clear error
     $('#loginScreen').classList.add('hidden');
     $('#registerScreen').classList.add('hidden');
@@ -166,7 +227,7 @@ function openHomeScreen(doc){
     showListOfUsers();
 }
 
-function openLoginScreen(){
+async function openLoginScreen(){
     // hide other screens, clear inputs, clear error
     $('#registerScreen').classList.add('hidden');
     $('#homeScreen').classList.add('hidden');

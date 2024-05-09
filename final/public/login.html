@@ -24,14 +24,15 @@
                 </div>
 
                 <div id="registerScreen" class="hidden">
-                    <div class="form">
+                    <form class="form" id="signupFOrm">
                         Username: <input type="text" id="registerUsername">
                         Password: <input type="password" id="registerPassword">
                         Name: <input type="text" id="registerName">
                         Email: <input type="email" id="registerEmail">
+                        Address: <input id="address" name="address" autocomplete="address-level1" type="text">
                         <span></span>
-                        <button id="registerBtn">Register</button>
-                    </div>
+                        <button id="registerBtn" type="submit">Register</button>
+                    </form>
                     <hr>
                     <div>
                         Already have an account?
