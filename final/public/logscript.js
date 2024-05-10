@@ -7,12 +7,13 @@ const form = document.getElementById('signupFOrm');
 const popup = document.getElementsByClassName('hero-content');
 const input = document.getElementById('address');
 
-// Initialize Google Places Autocomplete
-// const autocomplete = new google.maps.places.Autocomplete(input);
+// Update latitude and longitude elements
+const latitudeElement = document.getElementById('latitude');
+const longitudeElement = document.getElementById('longitude');
 
 const getClimate =  async () => {
-    if (input.value) localStorage.setItem("address", input.value)
-
+    if (input?.value) localStorage.setItem("address", input.value)
+    console.log(localStorage.getItem('address'), 'saved address')
     const address = input.value || localStorage.getItem('address');
 
     // Perform basic validation to ensure address is not empty
@@ -36,6 +37,10 @@ const getClimate =  async () => {
         const weatherData = await weatherResponse.json();
         console.log(weatherData, 'weather')
 
+        // idk 
+        latitudeElement.textContent = "Latitude: " + latitude;
+        longitudeElement.textContent = "Longitude: " + longitude;
+
         // Fetch natural disaster information
         const disasterResponse = await fetch(`https://api.ncei.noaa.gov/data/global-summary-of-the-day?latitude=${latitude}&longitude=${longitude}&datasetid=GSOM&units=metric&startdate=2023-01-01&enddate=2023-01-01&token=PwfvrAAFdXIluwIJJDDemafDSVEUEpAF`);
         const disasterData = await disasterResponse.json();
@@ -58,7 +63,7 @@ const getClimate =  async () => {
     }
 };
 
-// $("#getClimamte") && $("#getClimamte").addEventListener("click", getClimate)
+$("#getClimamte") && $("#getClimamte").addEventListener("click", getClimate)
 
 // login link action
 $('#loginLink').addEventListener('click', openLoginScreen);
@@ -104,7 +109,7 @@ $('#registerBtn').addEventListener('click', async () => {
         username: $('#registerUsername').value,
         password: $('#registerPassword').value,
         name: $('#registerName').value,
-        email: $('#registerEmail').value
+        email: $('#registerEmail').value,
     };
 
     fetch('/users', {
@@ -119,7 +124,8 @@ $('#registerBtn').addEventListener('click', async () => {
             if (doc.error) {
                 showError(doc.error);
             } else {
-                await openHomeScreen(doc);
+                // await getClimate();
+                await openHomeScreen(doc, weatherData);
             }
         })
         .catch(err => showError('ERROR: ' + err));
