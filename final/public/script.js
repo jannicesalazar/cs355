@@ -79,8 +79,6 @@ function showRegister() {
 
 // Function to handle login
 function login() {
-    // Code to handle login authentication
-    // Example:
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
 }

@@ -158,6 +158,8 @@ $('#deleteBtn').addEventListener('click', () => {
     });
 
 function showLocation(address) {
+    // get latitude and longitude from address
+
     var parts = address.split(',');
 
     fetch(`https://nominatim.openstreetmap.org/search?street=${parts[0]}&city=${parts[1]}&state=${parts[2]}&format=json&limit=1`)
@@ -189,6 +191,7 @@ function resetInputs(){
     }
 }
  function openHomeScreen(doc){
+    // save authToken in localStorage
     localStorage.authToken = doc.authToken;
     console.log("registering")
     $('#locationref').innerText = doc.user.address;
