@@ -3,7 +3,7 @@
 const $ = document.querySelector.bind(document);
 
 
-const form = document.getElementById('signupFOrm');
+const form = document.getElementById('signupForm');
 const popup = document.getElementsByClassName('hero-content');
 const input = document.getElementById('address');
 
@@ -11,59 +11,70 @@ const input = document.getElementById('address');
 const latitudeElement = document.getElementById('latitude');
 const longitudeElement = document.getElementById('longitude');
 
-const getClimate =  async () => {
-    if (input?.value) localStorage.setItem("address", input.value)
-    console.log(localStorage.getItem('address'), 'saved address')
-    const address = input.value || localStorage.getItem('address');
+const getClimate =  async (address) => {
+    // if (input?.value) localStorage.setItem("address", input.value)
+    // console.log(localStorage.getItem('address'), 'saved address')
+    // const address = input.value || localStorage.getItem('address');
 
     // Perform basic validation to ensure address is not empty
-    if (!address.trim()) {
-        alert('Please enter a valid address.');
-        return;
-    }
+    // if (!address.trim()) {
+    //     alert('Please enter a valid address.');
+    //     return;
+    // }
 
     // Use a geocoding service to get latitude and longitude
-    const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=AIzaSyAy9DVSWmQyFMBkMzly4eFjczHnZLPU08w`);
-    const data = await response.json();
-    console.log(data, 'lat and lon')
+    // const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=AIzaSyAy9DVSWmQyFMBkMzly4eFjczHnZLPU08w`);
+    // const data = await response.json();
+    // console.log(data, 'lat and lon')
+    var parts = address.split(',');
 
-    if (data) {
-        const result = data.results[0].geometry.location
-        const latitude = result.lat
-        const longitude = result.lng
+    fetch(`https://nominatim.openstreetmap.org/search?street=${parts[0]}&city=${parts[1]}&state=${parts[2]}&format=json&limit=1`)
+    .then(res => res.json()).then(docs => {
+    // if (data) {
+        // const result = data.results[0].geometry.location
+        const latitude = docs[0].lat
+        const longitude = docs[0].lon
         console.log("latitude: ", latitude, "longitude: ", longitude)
         // Fetch weather information
-        const weatherResponse = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=6dea368c99a053969745d5e110936277`);
-        const weatherData = await weatherResponse.json();
-        console.log(weatherData, 'weather')
+        fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=6dea368c99a053969745d5e110936277`)
+        .then( response => response.json())
+        .then( weatherData => {
+            //  
+            console.log(weatherData)
+            $('#weatherref').textContent = 'Weather: ' + weatherData.weather[0].description;
+            // Convert temperature from Kelvin to Fahrenheit
+            const fahrenheit = (weatherData.main.temp - 273.15) * 9/5 + 32;
+            $('#temperatureref').textContent = `Temperature: ${fahrenheit.toFixed(2)}°F`;
+            const iconCode = weatherData.weather[0].icon;
+            const weatherIconUrl = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
+            $('#weatherIcon').src = weatherIconUrl;
 
-        // idk 
-        latitudeElement.textContent = "Latitude: " + latitude;
-        longitudeElement.textContent = "Longitude: " + longitude;
+        }).catch((err) => {showError(err)})
 
         // Fetch natural disaster information
-        const disasterResponse = await fetch(`https://api.ncei.noaa.gov/data/global-summary-of-the-day?latitude=${latitude}&longitude=${longitude}&datasetid=GSOM&units=metric&startdate=2023-01-01&enddate=2023-01-01&token=PwfvrAAFdXIluwIJJDDemafDSVEUEpAF`);
-        const disasterData = await disasterResponse.json();
-        console.log(disasterData)
+        // const disasterResponse = await fetch(`https://api.ncei.noaa.gov/data/global-summary-of-the-day?latitude=${latitude}&longitude=${longitude}&datasetid=GSOM&units=metric&startdate=2023-01-01&enddate=2023-01-01&token=PwfvrAAFdXIluwIJJDDemafDSVEUEpAF`);
+        // const disasterData = await disasterResponse.json();
+        // console.log(disasterData)
 
-        // Construct popup content
-        const popupContent = `
-            <h3>Weather Information</h3>
-            <p>Temperature: ${weatherData.main.temp}°C</p>
-            <p>Description: ${weatherData.weather[0].description}</p>
-            <h3>Natural Disaster Information</h3>
-            <!-- Display relevant disaster information here -->
-        `;
+        // // Construct popup content
+        // const popupContent = `
+        //     <h3>Weather Information</h3>
+        //     <p>Temperature: ${weatherData.main.temp}°C</p>
+        //     <p>Description: ${weatherData.weather[0].description}</p>
+        //     <h3>Natural Disaster Information</h3>
+        //     <!-- Display relevant disaster information here -->
+        // `;
 
-        // Display popup with content
-        popup.innerHTML = popupContent;
-        popup.style.display = 'block';
-    } else {
-        alert('Address not found!');
-    }
+        // // Display popup with content
+        // popup.innerHTML = popupContent;
+        // popup.style.display = 'block';
+    }).catch((err) => {showError(err)});
+    // } else {
+    //     alert('Address not found!');
+    // }
 };
 
-$("#getClimamte") && $("#getClimamte").addEventListener("click", getClimate)
+// $("#getClimamte") && $("#getClimamte").addEventListener("click", getClimate)
 
 // login link action
 $('#loginLink').addEventListener('click', openLoginScreen);
@@ -72,20 +83,20 @@ $('#loginLink').addEventListener('click', openLoginScreen);
 $('#registerLink').addEventListener('click',openRegisterScreen);
 
 // logout link action
-$('#logoutLink').addEventListener('click',openLoginScreen);
+$('#logoutLink').addEventListener('click',openIndexScreen);
 // sign In button action
 $('#loginBtn').addEventListener('click', () => {
     if (!$('#loginUsername').value || !$('#loginPassword').value)
         return;
 
     const username = $('#loginUsername').value; // get username from input
-
+    localStorage.setItem("address", $("#address").value);
     fetch('/login',{
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
 
         body: JSON.stringify({ username: username, password: $('#loginPassword').value}) }
-        // get user record}
+        // get user record)
     ).then(res => res.json())
         .then(async doc => {
             if (!doc.authToken) {
@@ -97,75 +108,76 @@ $('#loginBtn').addEventListener('click', () => {
         .catch(err => showError('ERROR: ' + err));
     });
 
-// register button action
-$('#registerBtn').addEventListener('click', async () => {
-    if (!$('#registerUsername').value || !$('#registerPassword').value ||
+    // register button action
+    $('#registerBtn').addEventListener('click', async () => {
+        if (!$('#registerUsername').value || !$('#registerPassword').value ||
         !$('#registerName').value || !$('#registerEmail').value || !$("#address").value) {
-        showError('All fields are required.');
-        return;
-    }
-    localStorage.setItem("address", $("#address").value);
-    const data = {
-        username: $('#registerUsername').value,
-        password: $('#registerPassword').value,
-        name: $('#registerName').value,
-        email: $('#registerEmail').value,
-    };
+            showError('All fields are required.');
+            return;
+        }
+        localStorage.setItem("address", $("#address").value);
+        const data = {
+            username: $('#registerUsername').value,
+            password: $('#registerPassword').value,
+            name: $('#registerName').value,
+            email: $('#registerEmail').value,
+            address: $('#address').value
+        };
 
-    fetch('/users', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    })
-        .then(res => res.json())
-        .then(async doc => {
-            if (doc.error) {
-                showError(doc.error);
-            } else {
-                // await getClimate();
-                await openHomeScreen(doc, weatherData);
-            }
+        fetch('/users', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
         })
-        .catch(err => showError('ERROR: ' + err));
+            .then(res => res.json())
+            .then(async doc => {
+                if (doc.error) {
+                    showError(doc.error);
+                } else {
+                    await openHomeScreen(doc);
+                    console.log("doc: ",doc)
+                }
+            })
+            .catch(err => showError('ERROR: ' + err));
 });
 
 // update button action
-$('#updateBtn').addEventListener('click', () => {
-    if (!$('#updateName').value || !$('#updateEmail').value) {
-        showError('Fields cannot be blank.');
-        return;
-    }
+// $('#updateBtn').addEventListener('click', () => {
+//     if (!$('#updateName').value || !$('#updateEmail').value) {
+//         showError('Fields cannot be blank.');
+//         return;
+//     }
 
-    const data = {
-        name: $('#updateName').value,
-        email: $('#updateEmail').value
-    };
+//     const data = {
+//         name: $('#updateName').value,
+//         email: $('#updateEmail').value
+//     };
 
-    fetch('/users/' + $('#username').innerText+'/'+localStorage.authToken, {
-        method: 'PATCH',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    })
-        .then(res => res.json())
-        .then(doc => {
-            if (doc.error) {
-                showError(doc.error);
-            } else if (doc.ok) {
-                alert("Your name and email have been updated.");
-            }
-        })
-        .catch(err => showError('ERROR: ' + err));
-});
+//     fetch('/users/' + $('#username').innerText+'/'+localStorage.authToken, {
+//         method: 'PATCH',
+//         headers: {
+//             'Content-Type': 'application/json'
+//         },
+//         body: JSON.stringify(data)
+//     })
+//         .then(res => res.json())
+//         .then(doc => {
+//             if (doc.error) {
+//                 showError(doc.error);
+//             } else if (doc.ok) {
+//                 alert("Your name and email have been updated.");
+//             }
+//         })
+//         .catch(err => showError('ERROR: ' + err));
+// });
 
 // Delete button action
 $('#deleteBtn').addEventListener('click', () => {
     if (!confirm("Are you sure you want to delete your profile?"))
         return;
-
+    console.log(localStorage.authToken);
     fetch('/users/' + $('#username').innerText+'/'+localStorage.authToken, {
         method: 'DELETE'
     })
@@ -174,17 +186,21 @@ $('#deleteBtn').addEventListener('click', () => {
             if (doc.error) {
                 showError(doc.error);
             } else {
-                openLoginScreen();
+                openIndexScreen();
             }
         })
         .catch(err => showError('ERROR: ' + err));
-});
+    });
 
-function showListOfUsers() {
-    fetch('/users')
+function showLocation(address) {
+    // split address in the form of "77 Elliot St, Passaic, New Jersey" to a list
+    var parts = address.split(',');
+
+    fetch(`https://nominatim.openstreetmap.org/search?street=${parts[0]}&city=${parts[1]}&state=${parts[2]}&format=json&limit=1`)
         .then(res => res.json())
         .then(docs => {
-            docs.forEach(showUserInList);
+            $('#latref').innerText = 'Latitude: '+ docs[0].lat;
+            $('#longref').innerText = 'Longitude: '+ docs[0].lon;
         })
         .catch(err => showError('Could not get user list: ' + err));
 }
@@ -208,35 +224,39 @@ function resetInputs(){
         input.value='';
     }
 }
-
-async function openHomeScreen(doc){
+ function openHomeScreen(doc){
     localStorage.authToken = doc.authToken;
     console.log("registering")
-    window.location.href = "/home.html"
-    return
-    // hide other screens, clear inputs, clear error
+    $('#locationref').innerText = doc.user.address;
+    showLocation(doc.user.address);
+    getClimate(doc.user.address);
     $('#loginScreen').classList.add('hidden');
     $('#registerScreen').classList.add('hidden');
+    $('#homeScreen1').classList.remove('hidden');
     resetInputs();
     showError('');
-    // reveal home screen
-    $('#homeScreen').classList.remove('hidden');
-    // display name, username
-    $('#name').innerText = doc.user.name;
     $('#username').innerText = doc.user.username;
-    // display updatable user info in input fields
-    $('#updateName').value = doc.user.name;
-    $('#updateEmail').value = doc.user.email;
-    // clear prior userlist
-    $('#userlist').innerHTML = '';
-    // show new list of users
-    showListOfUsers();
+    // // hide other screens, clear inputs, clear error
+    // $('#loginScreen').classList.add('hidden');
+    // $('#registerScreen').classList.add('hidden');
+    // // reveal home screen
+    // $('#homeScreen').classList.remove('hidden');
+    // // display name, username
+    // $('#name').innerText = doc.user.name;
+    // // display updatable user info in input fields
+    // $('#updateName').value = doc.user.name;
+    // $('#updateEmail').value = doc.user.email;
+    // // clear prior userlist
+    // $('#userlist').innerHTML = '';
+    // // show new list of users
+    // showListOfUsers();
 }
 
-async function openLoginScreen(){
+
+function openLoginScreen(){
     // hide other screens, clear inputs, clear error
     $('#registerScreen').classList.add('hidden');
-    $('#homeScreen').classList.add('hidden');
+    $('#homeScreen1').classList.add('hidden');
     resetInputs();
     showError('');
     // reveal login screen
@@ -246,9 +266,13 @@ async function openLoginScreen(){
 function openRegisterScreen(){
     // hide other screens, clear inputs, clear error
     $('#loginScreen').classList.add('hidden');
-    $('#homeScreen').classList.add('hidden');
+    $('#homeScreen1').classList.add('hidden');
     resetInputs();
     showError('');
     // reveal register screen
     $('#registerScreen').classList.remove('hidden');
+}
+
+function openIndexScreen(){
+    window.location.href = 'index.html';
 }

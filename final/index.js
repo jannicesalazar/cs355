@@ -22,10 +22,10 @@ app.get('/users',(req,res)=>{ // GET all data
 
 //route to register user
 app.post('/users', (req, res) => {
-    const { username, password, email, name } = req.body;
+    const { username, password, email, name, address} = req.body;
     
     //validate input fields
-    if (!username || !password || !email || !name) {
+    if (!username || !password || !email || !name || !address) {
         return res.status(400).send({ error: 'Missing fields.' });
     }
 
@@ -47,6 +47,7 @@ app.post('/users', (req, res) => {
                 password: hashedPassword,
                 email,
                 name,
+                address,
                 authToken // authToken is defined here
             };
 
@@ -60,7 +61,7 @@ app.post('/users', (req, res) => {
                 return res.status(500).send({ error: 'Failed to register user.' });
             }
             //send back authentication token
-            res.send({user: {username: insertedUser.username, name: insertedUser.name, email: insertedUser.email}, authToken });
+            res.send({user: {username: insertedUser.username, name: insertedUser.name, email: insertedUser.email, address: insertedUser.address}, authToken });
         })
         .catch(error => {
             console.error(error);
@@ -134,9 +135,10 @@ app.post('/login', (req, res) => {
             }
             
             const authToken = generateAuthToken();
-            
+            res.send({ authToken, user: { username: user.username, name: user.name, email: user.email, address: user.address} });
             db.updateOne({ username }, { $set: { authToken } })
-                .then(() => res.send({ authToken, user: { username: user.username, name: user.name, email: user.email } }))
+                .then((user) => {
+                console.log(user);})
                 .catch(err => res.status(500).send({ error: 'Internal server error.' }));
         })
         .catch(err => res.status(500).send({ error: 'Internal server error.' }));

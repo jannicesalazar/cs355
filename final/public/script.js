@@ -63,34 +63,34 @@ const onMapClick = (e) => {
 map.on('click', onMapClick);
 
 //triggered when you press enter in the search bar 
-document.getElementById('input').addEventListener('keydown', function (e) {
-    if (e.key === 'Enter') {
-        const searchTerm = this.value;
-        if (searchTerm) {
-            //geocoding API for countries 
-            const geocodeApiUrl = `https://nominatim.openstreetmap.org/search?country=${searchTerm}&format=json&limit=1`;
+// document.getElementById('input').addEventListener('keydown', function (e) {
+//     if (e.key === 'Enter') {
+//         const searchTerm = this.value;
+//         if (searchTerm) {
+//             //geocoding API for countries 
+//             const geocodeApiUrl = `https://nominatim.openstreetmap.org/search?country=${searchTerm}&format=json&limit=1`;
 
-            fetch(geocodeApiUrl)
-                .then(response => response.json())
-                .then(data => {
-                    //fits country to its coordinates when found 
-                    if (data.length > 0) {
-                        const countryCoords = [parseFloat(data[0].lat), parseFloat(data[0].lon)];
-                        map.fitBounds([
-                            [countryCoords[0] - 1, countryCoords[1] - 1],
-                            [countryCoords[0] + 1, countryCoords[1] + 1]
-                        ]); } 
-                    else {
-                        //displays error if country not found 
-                        const errorPopupContent = '<b>Error:</b> Country not found';
-                        marker (map.getCenter(), errorPopupContent); } })
+//             fetch(geocodeApiUrl)
+//                 .then(response => response.json())
+//                 .then(data => {
+//                     //fits country to its coordinates when found 
+//                     if (data.length > 0) {
+//                         const countryCoords = [parseFloat(data[0].lat), parseFloat(data[0].lon)];
+//                         map.fitBounds([
+//                             [countryCoords[0] - 1, countryCoords[1] - 1],
+//                             [countryCoords[0] + 1, countryCoords[1] + 1]
+//                         ]); } 
+//                     else {
+//                         //displays error if country not found 
+//                         const errorPopupContent = '<b>Error:</b> Country not found';
+//                         marker (map.getCenter(), errorPopupContent); } })
                 
-                .catch(() => {
-                    //handles errors when getting data
-                    const errorPopupContent = '<b>Error:</b> Unable to fetch data';
-                    marker (map.getCenter(), errorPopupContent); });
-                //clears input value in input box 
-                this.value = ''; } } });
+//                 .catch(() => {
+//                     //handles errors when getting data
+//                     const errorPopupContent = '<b>Error:</b> Unable to fetch data';
+//                     marker (map.getCenter(), errorPopupContent); });
+//                 //clears input value in input box 
+//                 this.value = ''; } } });
 
 // Function to open the login popup
 function openPopup() {
@@ -118,6 +118,6 @@ function login() {
     // Example: You can send a request to your server to validate credentials
 }
 
-function redirectToRegister() {
-    window.location.href = 'login.html#registerScreen';
-}
+// function redirectToRegister() {
+//     window.location.href = 'login.html#registerScreen';
+// }

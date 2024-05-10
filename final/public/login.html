@@ -1,6 +1,7 @@
 <html>
     <head>
         <link rel="stylesheet" href="logstyle.css">
+        <link rel="stylesheet" href="style.css">
     </head>
     <body>
         <div id="frame">
@@ -9,7 +10,7 @@
             </div>
             <div id="main">
 
-                <div id="loginScreen">
+                <div id="loginScreen" class="">
                     <div class="form">
                         Username: <input type="text" id="loginUsername">
                         Password: <input type="password" id="loginPassword">
@@ -23,16 +24,46 @@
                     </div>
                 </div>
 
+                <div id="homeScreen1" class="hidden">
+                    <header>
+                        <nav>
+                          <button id="deleteBtn" class="critical" style="font-family: monospace; padding: 10px; border: rgb(40, 54, 40) 1px solid; border-radius: 20px; background-color: rgb(45, 63, 45);">Delete My Profile</button>
+                          <button id="logoutLink" href="index.html" style="font-family: monospace; padding: 10px; border: rgb(40, 54, 40) 1px solid; border-radius: 20px; background-color: rgb(45, 63, 45);">Logout</button>
+                          <p>Username: <span id="username"></span></p>
+                        </nav>
+                    </header>
+                    <section class="hero">
+                        <!-- <button id="getClimamte" style="font-family: monospace;">Get climate</button> -->
+                        <div class="hero-content">
+                            <h1 id="locationref"></h1>
+                            <p id="latref">Latitude: </p>
+                            <p id="longref">Longitude: </p>
+                        </div>
+                        <div class="hero-content">
+                            <p id="weatherref"></p>
+                            <p id="temperatureref"></p>
+                            <img id="weatherIcon" src="" alt="">
+                        </div>
+                    </section >
+                    <!-- container for the map -->
+                    <!-- <div class="map-container">
+                        <div id="map"></div>
+                
+                    </div> -->
+                    <!-- Leaflet CSS and JS from CDN -->
+                    <!-- <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script> -->
+                </div>
+
                 <div id="registerScreen" class="hidden">
-                    <form class="form" id="signupFOrm">
+                    <div class="form" >
                         Username: <input type="text" id="registerUsername">
                         Password: <input type="password" id="registerPassword">
                         Name: <input type="text" id="registerName">
                         Email: <input type="email" id="registerEmail">
                         Address: <input id="address" name="address" autocomplete="address-level1" type="text">
                         <span></span>
-                        <button id="registerBtn" type="submit">Register</button>
-                    </form>
+                        <button id="registerBtn">Register</button>
+                    </div>
                     <hr>
                     <div>
                         Already have an account?
@@ -40,7 +71,7 @@
                     </div>
                 </div>
 
-                <div id="homeScreen" class="hidden">
+                <!-- <div id="homeScreen" class="hidden">
                     Welcome <span id="name"></span>!
                     <div>
                         Click <a href="#" id="logoutLink">here</a> to log out.
@@ -61,7 +92,7 @@
                 </div>
                 <div class="right">
                     <a href="index.html" id="back">Back</a>
-                </div>
+                </div> -->
             </div>
 
             <div id="error" class="critical"></div>
@@ -69,4 +100,5 @@
         </div>
     </body>
     <script src="logscript.js"></script>
+    <script src="script.js"></script>
 </html>

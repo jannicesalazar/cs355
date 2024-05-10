@@ -1,5 +1,5 @@
 .top-bar {
-  background-color: #ffffff;
+  background-color: #989898;
   color: rgb(0, 0, 0);
   display: flex;
   justify-content: space-between;
@@ -52,7 +52,7 @@
 }
 
 .hero {
-  background-color: #f4f4f4;
+  background-color: #7e7e7e;
   padding: 100px;
   text-align: center;
   font-family: monospace;
