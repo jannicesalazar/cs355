@@ -12,20 +12,6 @@ const latitudeElement = document.getElementById('latitude');
 const longitudeElement = document.getElementById('longitude');
 
 const getClimate =  async (address) => {
-    // if (input?.value) localStorage.setItem("address", input.value)
-    // console.log(localStorage.getItem('address'), 'saved address')
-    // const address = input.value || localStorage.getItem('address');
-
-    // Perform basic validation to ensure address is not empty
-    // if (!address.trim()) {
-    //     alert('Please enter a valid address.');
-    //     return;
-    // }
-
-    // Use a geocoding service to get latitude and longitude
-    // const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=AIzaSyAy9DVSWmQyFMBkMzly4eFjczHnZLPU08w`);
-    // const data = await response.json();
-    // console.log(data, 'lat and lon')
     var parts = address.split(',');
 
     fetch(`https://nominatim.openstreetmap.org/search?street=${parts[0]}&city=${parts[1]}&state=${parts[2]}&format=json&limit=1`)
@@ -50,31 +36,8 @@ const getClimate =  async (address) => {
             $('#weatherIcon').src = weatherIconUrl;
 
         }).catch((err) => {showError(err)})
-
-        // Fetch natural disaster information
-        // const disasterResponse = await fetch(`https://api.ncei.noaa.gov/data/global-summary-of-the-day?latitude=${latitude}&longitude=${longitude}&datasetid=GSOM&units=metric&startdate=2023-01-01&enddate=2023-01-01&token=PwfvrAAFdXIluwIJJDDemafDSVEUEpAF`);
-        // const disasterData = await disasterResponse.json();
-        // console.log(disasterData)
-
-        // // Construct popup content
-        // const popupContent = `
-        //     <h3>Weather Information</h3>
-        //     <p>Temperature: ${weatherData.main.temp}°C</p>
-        //     <p>Description: ${weatherData.weather[0].description}</p>
-        //     <h3>Natural Disaster Information</h3>
-        //     <!-- Display relevant disaster information here -->
-        // `;
-
-        // // Display popup with content
-        // popup.innerHTML = popupContent;
-        // popup.style.display = 'block';
     }).catch((err) => {showError(err)});
-    // } else {
-    //     alert('Address not found!');
-    // }
 };
-
-// $("#getClimamte") && $("#getClimamte").addEventListener("click", getClimate)
 
 // login link action
 $('#loginLink').addEventListener('click', openLoginScreen);
@@ -144,34 +107,36 @@ $('#loginBtn').addEventListener('click', () => {
 });
 
 // update button action
-// $('#updateBtn').addEventListener('click', () => {
-//     if (!$('#updateName').value || !$('#updateEmail').value) {
-//         showError('Fields cannot be blank.');
-//         return;
-//     }
+$('#updateBtn').addEventListener('click', () => {
+    if (!$('#updateName').value || !$('#updateAddress').value) {
+        showError('Fields cannot be blank.');
+        return;
+    }
 
-//     const data = {
-//         name: $('#updateName').value,
-//         email: $('#updateEmail').value
-//     };
+    const data = {
+        name: $('#updateName').value,
+        address: $('#updateAddress').value
+    };
+    localStorage.setItem("address", $("#address").value);
 
-//     fetch('/users/' + $('#username').innerText+'/'+localStorage.authToken, {
-//         method: 'PATCH',
-//         headers: {
-//             'Content-Type': 'application/json'
-//         },
-//         body: JSON.stringify(data)
-//     })
-//         .then(res => res.json())
-//         .then(doc => {
-//             if (doc.error) {
-//                 showError(doc.error);
-//             } else if (doc.ok) {
-//                 alert("Your name and email have been updated.");
-//             }
-//         })
-//         .catch(err => showError('ERROR: ' + err));
-// });
+    fetch('/users/' + $('#username').innerText+'/'+localStorage.authToken, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+        .then(res => res.json())
+        .then(doc => {
+            if (doc.error) {
+                showError(doc.error);
+            } else if (doc.ok) {
+                alert("Your name and address have been updated.");
+                openLoginScreen();
+            }
+        })
+        .catch(err => showError('ERROR: ' + err));
+});
 
 // Delete button action
 $('#deleteBtn').addEventListener('click', () => {
@@ -193,7 +158,6 @@ $('#deleteBtn').addEventListener('click', () => {
     });
 
 function showLocation(address) {
-    // split address in the form of "77 Elliot St, Passaic, New Jersey" to a list
     var parts = address.split(',');
 
     fetch(`https://nominatim.openstreetmap.org/search?street=${parts[0]}&city=${parts[1]}&state=${parts[2]}&format=json&limit=1`)
@@ -236,20 +200,8 @@ function resetInputs(){
     resetInputs();
     showError('');
     $('#username').innerText = doc.user.username;
-    // // hide other screens, clear inputs, clear error
-    // $('#loginScreen').classList.add('hidden');
-    // $('#registerScreen').classList.add('hidden');
-    // // reveal home screen
-    // $('#homeScreen').classList.remove('hidden');
-    // // display name, username
-    // $('#name').innerText = doc.user.name;
-    // // display updatable user info in input fields
-    // $('#updateName').value = doc.user.name;
-    // $('#updateEmail').value = doc.user.email;
-    // // clear prior userlist
-    // $('#userlist').innerHTML = '';
-    // // show new list of users
-    // showListOfUsers();
+    $('#updateName').value = doc.user.name;
+    $('#updateAddress').value = doc.user.address;
 }
 
 

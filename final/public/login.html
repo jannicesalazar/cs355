@@ -6,7 +6,7 @@
     <body>
         <div id="frame">
             <div class="title">
-                <div class="prepare">PREPARE</div>
+                <div class="prepare">WEATHER</div>
             </div>
             <div id="main">
 
@@ -30,10 +30,13 @@
                           <button id="deleteBtn" class="critical" style="font-family: monospace; padding: 10px; border: rgb(40, 54, 40) 1px solid; border-radius: 20px; background-color: rgb(45, 63, 45);">Delete My Profile</button>
                           <button id="logoutLink" href="index.html" style="font-family: monospace; padding: 10px; border: rgb(40, 54, 40) 1px solid; border-radius: 20px; background-color: rgb(45, 63, 45);">Logout</button>
                           <p>Username: <span id="username"></span></p>
+                          <p>Name: <input type="text" id="updateName"></p>
+                          <p>Address: <input type="address" id="updateAddress"></p>
+                        <span></span>
+                        <button id="updateBtn" style="font-family: monospace; padding: 10px; border: rgb(40, 54, 40) 1px solid; border-radius: 20px; background-color: rgb(45, 63, 45);">Update My Information</button>
                         </nav>
                     </header>
                     <section class="hero">
-                        <!-- <button id="getClimamte" style="font-family: monospace;">Get climate</button> -->
                         <div class="hero-content">
                             <h1 id="locationref"></h1>
                             <p id="latref">Latitude: </p>
@@ -45,13 +48,7 @@
                             <img id="weatherIcon" src="" alt="">
                         </div>
                     </section >
-                    <!-- container for the map -->
-                    <!-- <div class="map-container">
-                        <div id="map"></div>
                 
-                    </div> -->
-                    <!-- Leaflet CSS and JS from CDN -->
-                    <!-- <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script> -->
                 </div>
 
                 <div id="registerScreen" class="hidden">
@@ -70,29 +67,6 @@
                         Click <a href="#" id="loginLink">here</a> to log in.
                     </div>
                 </div>
-
-                <!-- <div id="homeScreen" class="hidden">
-                    Welcome <span id="name"></span>!
-                    <div>
-                        Click <a href="#" id="logoutLink">here</a> to log out.
-                    </div>
-                    <hr>
-                    Username: <span id="username"></span>
-                    <div class="form">
-                        Name: <input type="text" id="updateName">
-                        Email: <input type="email" id="updateEmail">
-                        <span></span>
-                        <button id="updateBtn">Update My Information</button>
-                        <span></span>
-                        <button id="deleteBtn" class="critical">Delete My Profile</button>
-                    </div>
-                    <hr>
-                    Here's the current list of users on our social:
-                    <div id="userlist"></div>
-                </div>
-                <div class="right">
-                    <a href="index.html" id="back">Back</a>
-                </div> -->
             </div>
 
             <div id="error" class="critical"></div>
